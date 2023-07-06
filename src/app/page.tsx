@@ -1,12 +1,11 @@
 "use client"
 
-import { signIn } from 'next-auth/react'
+import { signIn, signOut, useSession } from 'next-auth/react';
 
 export default function Home() {
+  const {data} = useSession()
+
   return (
-  <div>
-    <button onClick={() => signIn()}>Login</button>
-  </div>
-  
+    <div className="bg-secondary"></div>
   )
 }
