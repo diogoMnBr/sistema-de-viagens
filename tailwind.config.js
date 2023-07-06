@@ -17,7 +17,7 @@ module.exports = {
         secondary: '#312A4F',
         primaryLighter: '#DDD5EA',
         grayPrimary: "#717171",
-        grayLighter: "#BBFBF"
+        grayLighter: "#BBFBF",
       },
       textColor: {
         dark: '#717171',
