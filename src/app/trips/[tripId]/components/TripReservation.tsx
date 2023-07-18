@@ -8,7 +8,10 @@ import Button from '@/components/Button'
 import { useForm, Controller } from 'react-hook-form'
 
 interface TripReservationProps {
-    trip: Trip
+    tripStartDate: Date;
+    tripEndDate: Date;
+    trip: Trip;
+    maxGuests: number;
 }
 
 interface TripReservationForm {
@@ -17,17 +20,20 @@ interface TripReservationForm {
     endDate?: Date | null;
 }
 
-const TripReservation = ({trip}: TripReservationProps) => {
+const TripReservation = ({ maxGuests, tripEndDate, tripStartDate }: TripReservationProps) => {
     const {
         register, 
         handleSubmit, 
         formState: { errors },
         control,
+        watch
     } = useForm<TripReservationForm>();
 
     const onSubmit = (data: any) => {
         console.log(data);
     }
+
+    const startDate = watch("startDate");
 
     return (
         <div>
@@ -50,6 +56,7 @@ const TripReservation = ({trip}: TripReservationProps) => {
                             selected={field.value} 
                             placeholderText="Data de ida" 
                             className="w-full"
+                            minDate={startDate}
                         />
                         )}
                     />
@@ -70,6 +77,8 @@ const TripReservation = ({trip}: TripReservationProps) => {
                             selected={field.value} 
                             placeholderText="Data final" 
                             className="w-full"
+                            maxDate={ tripEndDate }
+                            minDate = { startDate ?? tripStartDate }
                         />
                         )}
                     />
@@ -83,7 +92,7 @@ const TripReservation = ({trip}: TripReservationProps) => {
                     }
 
                 })} 
-                placeholder={`Número de hóspedes (max: ${trip.maxGuests})`} 
+                placeholder={`Número de hóspedes (max: ${maxGuests})`} 
                 className="mt-4"
                 error={!!errors?.guests}
                 errorMessage={errors?.guests?.message}
