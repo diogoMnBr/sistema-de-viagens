@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,7 +11,6 @@ model Trip {
   id                  String            @id @default(uuid())
   name                String
   location            String
-  locationDescription String            @default("Morbi a metus. Phasellus enim erat, vestibulum vel, aliquam a, posuere eu, velit. Nullam sapien sem, ornare ac, nonummy non, lobortis a enim. Nunc tincidunt ante vitae massa. Duis ante orci, molestie vitae vehicula venenatis, tincidunt ac pede. Fusce fermentum.")
   startDate           DateTime
   endDate             DateTime
   pricePerDay         Decimal           @db.Decimal(8, 2)
@@ -23,20 +19,21 @@ model Trip {
   imagesUrl           String[]
   highlights          String[]
   maxGuests           Int
-  reservations        TripReservation[]
   countryCode         String
   recommended         Boolean           @default(false)
+  locationDescription String            @default("Morbi a metus. Phasellus enim erat, vestibulum vel, aliquam a, posuere eu, velit. Nullam sapien sem, ornare ac, nonummy non, lobortis a enim. Nunc tincidunt ante vitae massa. Duis ante orci, molestie vitae vehicula venenatis, tincidunt ac pede. Fusce fermentum.")
+  reservations        TripReservation[]
 }
 
 model TripReservation {
   id         String   @id @default(uuid())
   tripId     String
-  trip       Trip     @relation(fields: [tripId], references: [id]) // relation between TripReservation ID and Trip ID
   userId     String
-  user       User     @relation(fields: [userId], references: [id])
   startDate  DateTime
   endDate    DateTime
   totalPrice Decimal  @db.Decimal(8, 2)
+  trip       Trip     @relation(fields: [tripId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
 }
 
 model Account {
@@ -45,15 +42,14 @@ model Account {
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -68,10 +64,10 @@ model Session {
 
 model User {
   id            String            @id @default(cuid())
-  name          String?
   email         String?           @unique
   emailVerified DateTime?
   image         String?
+  name          String?
   accounts      Account[]
   sessions      Session[]
   reservations  TripReservation[]

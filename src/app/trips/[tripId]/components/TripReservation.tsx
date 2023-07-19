@@ -7,20 +7,22 @@ import { Trip } from '@prisma/client'
 import Button from '@/components/Button'
 import { useForm, Controller } from 'react-hook-form'
 import { differenceInDays } from 'date-fns'
-import { Decimal } from '@prisma/client/runtime/library'
+/* import { POST } from '../../../api/trips/check/route' */
 
 interface TripReservationProps {
     tripStartDate: Date;
     tripEndDate: Date;
     trip: Trip;
     maxGuests: number;
-    pricePerDay: any;
+    pricePerDay: number;
+    
 }
 
 interface TripReservationForm {
     guests: number;
     startDate?: Date | null;
     endDate?: Date | null;
+    tripId: string;
 }
 
 const TripReservation = ({ maxGuests, tripEndDate, tripStartDate, pricePerDay }: TripReservationProps) => {
@@ -34,9 +36,21 @@ const TripReservation = ({ maxGuests, tripEndDate, tripStartDate, pricePerDay }:
 
     
 
-    const onSubmit = (data: any) => {
-        console.log(data);
-    }
+    const onSubmit = async (data: TripReservationForm ) => {
+        const response = await fetch('http://localhost:3000/api/trips/check', {
+            method: "POST",
+            body: Buffer.from(JSON.stringify({
+                    startDate: data.startDate,
+                    endDate: data.endDate,
+                    tripId: data.tripId,
+                })
+            ),
+    });
+
+    const res = await response.json();
+
+    console.log({res})
+}
 
     const startDate = watch("startDate");
     const endDate = watch("endDate");
